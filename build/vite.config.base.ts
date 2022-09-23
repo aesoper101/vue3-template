@@ -4,9 +4,18 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import svgLoader from 'vite-svg-loader';
 import windiCSS from './plugin/windiCSS';
+import configArcoResolverPlugin from './plugin/arcoResolver';
+import configStyleImportPlugin from './plugin/styleImport';
 
 export default defineConfig({
-  plugins: [vue(), vueJsx(), svgLoader({ svgoConfig: {} }), windiCSS()],
+  plugins: [
+    vue(),
+    vueJsx(),
+    svgLoader({ svgoConfig: {} }),
+    configArcoResolverPlugin(),
+    configStyleImportPlugin(),
+    windiCSS(),
+  ],
   resolve: {
     alias: [
       {
