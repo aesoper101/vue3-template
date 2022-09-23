@@ -1,6 +1,6 @@
 import { createPinia } from 'pinia';
 
-export { useCounterStore } from '@/stores/counter';
+export { useLocaleStore } from '@/stores/locale';
 
 const store = createPinia();
 

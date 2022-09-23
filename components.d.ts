@@ -70,6 +70,7 @@ declare module '@vue/runtime-core' {
     ATabs: typeof import('@arco-design/web-vue')['Tabs'];
     ATag: typeof import('@arco-design/web-vue')['Tag'];
     ATextarea: typeof import('@arco-design/web-vue')['Textarea'];
+    ATimePicker: typeof import('@arco-design/web-vue')['TimePicker'];
     ATooltip: typeof import('@arco-design/web-vue')['Tooltip'];
     ATypographyParagraph: typeof import('@arco-design/web-vue')['TypographyParagraph'];
     ATypographyText: typeof import('@arco-design/web-vue')['TypographyText'];
