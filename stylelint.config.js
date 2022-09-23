@@ -69,6 +69,7 @@ module.exports = {
       ],
       { severity: 'warning' },
     ],
+    // 属性的排序
     'order/properties-order': [
       'position',
       'z-index',
