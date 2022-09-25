@@ -4,7 +4,8 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import svgLoader from 'vite-svg-loader';
 import windiCSS from './plugin/windiCSS';
-import configArcoResolverPlugin from './plugin/arcoResolver';
+import configResolverPlugin from './plugin/resolvers';
+import configVitePluginForArco from './plugin/arco';
 import configStyleImportPlugin from './plugin/styleImport';
 
 export default defineConfig({
@@ -12,8 +13,9 @@ export default defineConfig({
     vue(),
     vueJsx(),
     svgLoader({ svgoConfig: {} }),
-    configArcoResolverPlugin(),
+    configResolverPlugin(),
     configStyleImportPlugin(),
+    configVitePluginForArco(),
     windiCSS(),
   ],
   resolve: {
@@ -25,6 +27,10 @@ export default defineConfig({
       {
         find: 'assets',
         replacement: resolve(__dirname, '../src/assets'),
+      },
+      {
+        find: 'types',
+        replacement: resolve(__dirname, '../types'),
       },
       {
         find: 'vue-i18n',
