@@ -5,6 +5,7 @@ import {
   TOKEN_EXPIRES_TIME_STORE_KEY,
   TOKEN_STORE_KEY,
 } from '@/constants';
+import { computed } from 'vue';
 
 export const useTokenStore = defineStore('token', () => {
   const tokenStore = useStorage(TOKEN_STORE_KEY, '', localStorage);
@@ -15,38 +16,55 @@ export const useTokenStore = defineStore('token', () => {
     tokenStore.value = token;
   };
 
-  const getToken = () => {
+  const token = computed(() => {
     return tokenStore.value;
-  };
+  });
 
-  const isTokenWillExpire = () => {
+  const isLogin = computed(() => {
     if (tokenStore.value && expireTimeStore.value) {
       const nowTime = parseInt(String(new Date().getTime() / 1000));
       // 如果超过60秒重新获取token
-      return expireTimeStore.value / 1000 - nowTime < 60;
+      return expireTimeStore.value / 1000 - nowTime > 0;
     }
     return false;
-  };
+  });
+
+  const isTokenWillExpire = computed(() => {
+    if (tokenStore.value && expireTimeStore.value) {
+      const nowTime = parseInt(String(new Date().getTime() / 1000));
+      // 如果超过60秒重新获取token
+      const subTime = expireTimeStore.value / 1000 - nowTime;
+      return subTime < 60 && subTime > 0;
+    }
+    return false;
+  });
 
   const setRefreshToken = (refreshToken?: string) => {
     refreshTokenStore.value = refreshToken;
   };
 
-  const getRefreshToken = () => {
+  const refreshToken = computed(() => {
     return refreshTokenStore.value;
-  };
+  });
 
   const setExpireTime = (expire?: number) => {
     expireTimeStore.value = expire;
   };
 
+  const clearToken = () => {
+    tokenStore.value = null;
+    refreshTokenStore.value = null;
+    expireTimeStore.value = null;
+  };
+
   return {
     setToken,
-    getToken,
+    token,
     isTokenWillExpire,
+    isLogin,
     setRefreshToken,
-    getRefreshToken,
+    refreshToken,
     setExpireTime,
-    token: tokenStore,
+    clearToken,
   };
 });

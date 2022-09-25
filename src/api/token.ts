@@ -30,10 +30,14 @@ class TokenApi {
   }
 
   public refreshToken<T = RefreshTokenResponse, R = APIResult<T>>(input: RefreshTokenRequest) {
-    return useRequest<R>('/v1/refreshToken', {
-      data: input,
-      method: 'post',
-    });
+    return useRequest<R>(
+      '/v1/refreshToken',
+      {
+        data: input,
+        method: 'post',
+      },
+      { immediate: true },
+    );
   }
 }
 

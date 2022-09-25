@@ -17,7 +17,7 @@ export default [
     url: '/api/v1/refreshToken',
     method: 'post',
     rawResponse: async (req, res) => {
-      res.statusCode = 400;
+      res.statusCode = 200;
       res.end(
         JSON.stringify(
           resultSuccess({

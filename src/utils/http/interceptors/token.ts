@@ -1,79 +1,63 @@
 import type { AxiosRequestConfig } from 'axios';
 import type { AxiosRequestInterceptor } from './type';
 import { useTokenStore } from '@/stores/token';
-import { ref } from 'vue';
 import { tokenApi } from '@/api/token';
+import { until } from '@vueuse/core';
+import type { AxiosError } from 'axios';
 
 export function BearerTokenInterceptor(): AxiosRequestInterceptor {
   return {
     onFulfilled: (config: AxiosRequestConfig) => {
-      const store = useTokenStore();
-      const token = store.getToken();
-      if (token) {
-        if (!config.headers) {
-          config.headers = {};
-        }
-        console.log(22);
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return Promise.resolve(config);
+      const { token } = useTokenStore();
+      return Promise.resolve(setTokenHeader(config, token));
     },
   };
 }
 
-type callback = (newToken: string) => void;
+export function setTokenHeader(config: AxiosRequestConfig, token: string) {
+  if (token) {
+    if (!config.headers) {
+      config.headers = {};
+    }
 
-const isRefeshing = ref(false);
-let requests: callback[] = [];
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
-export function RefreshTokenInterceptor(abortController: AbortController): AxiosRequestInterceptor {
-  return {
-    onFulfilled: (config: AxiosRequestConfig) => {
-      const { isTokenWillExpire, getRefreshToken, setToken, setExpireTime } = useTokenStore();
-      if (isTokenWillExpire()) {
-        if (!isRefeshing.value) {
-          isRefeshing.value = true;
+  return config;
+}
 
-          const { execute, data } = tokenApi.refreshToken({ refreshToken: getRefreshToken() });
-          console.log('refreshToken 1');
-          execute()
-            .then(() => {
-              console.log('refreshToken 2');
-              setToken(data.value?.result.token);
-              setExpireTime(data.value?.result.expireTime);
-              isRefeshing.value = false;
-              return Promise.resolve(data.value?.result.token || '');
-            })
-            .then(
-              (token) => {
-                console.log('refreshToken 4');
-                requests.forEach((cb: callback) => cb(token));
-                // 执行完成后，清空队列
-                requests = [];
-              },
-              () => {
-                console.log('refreshToken 4');
-                isRefeshing.value = false;
-                abortController.abort();
-                return config;
-              },
-            );
+export function refreshAuthLogic(failedRequest: AxiosError) {
+  console.log('======refreshAuthLogic======');
+  return new Promise((resolve, reject) => {
+    const { refreshToken, setToken, setExpireTime, clearToken } = useTokenStore();
+    const { isFinished, data, error } = tokenApi.refreshToken({
+      refreshToken: refreshToken,
+    });
+
+    until(isFinished)
+      .toBe(true)
+      .then(() => {
+        console.log('======refreshAuthLogic isFinished======');
+        if (!error) {
+          clearToken();
+          reject(error);
+          return;
+        }
+        const token = data.value?.result.token;
+        const expireTime = data.value?.result.expireTime;
+        setToken(token);
+        setExpireTime(expireTime);
+
+        if (failedRequest.response) {
+          if (failedRequest.response.config) {
+            if (!failedRequest.response.config.headers) {
+              failedRequest.response.config.headers = {};
+            }
+            failedRequest.response.config.headers['Authorization'] = 'Bearer ' + token;
+          }
         }
 
-        return new Promise((resolve) => {
-          console.log('refreshToken 5');
-          requests.push((newToken: string) => {
-            console.log('refreshToken 6', newToken);
-            if (!config.headers) {
-              config.headers = {};
-            }
-            config.headers.Authorization = `Bearer ${newToken}`;
-            resolve(config);
-          });
-        });
-      }
-
-      return config;
-    },
-  };
+        resolve(null);
+      });
+  });
 }
