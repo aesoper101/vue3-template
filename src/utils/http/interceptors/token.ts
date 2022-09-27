@@ -1,7 +1,7 @@
 import type { AxiosRequestConfig } from 'axios';
 import type { AxiosRequestInterceptor } from './type';
 import { useTokenStore } from '@/stores/token';
-import { tokenApi } from '@/api/token';
+import { loginApi } from '@/api/login';
 import { until } from '@vueuse/core';
 import type { AxiosError } from 'axios';
 
@@ -30,7 +30,7 @@ export function refreshAuthLogic(failedRequest: AxiosError) {
   console.log('======refreshAuthLogic======');
   return new Promise((resolve, reject) => {
     const { refreshToken, setToken, setExpireTime, clearToken } = useTokenStore();
-    const { isFinished, data, error } = tokenApi.refreshToken({
+    const { isFinished, data, error } = loginApi.refreshToken({
       refreshToken: refreshToken,
     });
 

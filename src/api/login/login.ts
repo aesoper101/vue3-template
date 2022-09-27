@@ -1,30 +1,22 @@
 import { useRequest } from '@/utils/http/request';
 import type { APIResult } from '@/utils/http/type';
+import type {
+  LoginRequest,
+  LoginResponse,
+  RefreshTokenRequest,
+  RefreshTokenResponse,
+} from './types';
 
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  token: string;
-  refreshToken: string;
-  expireTime: number;
-}
-
-export interface RefreshTokenRequest {
-  refreshToken: string;
-}
-
-export interface RefreshTokenResponse {
-  token: string;
-  expireTime: number;
-}
-
-class TokenApi {
+class LoginApi {
   public login<T = LoginResponse, R = APIResult<T>>(input: LoginRequest) {
     return useRequest<R>('/v1/login', {
       data: input,
+      method: 'post',
+    });
+  }
+
+  public logout<T = LoginResponse, R = APIResult<T>>() {
+    return useRequest<R>('/v1/logout', {
       method: 'post',
     });
   }
@@ -41,4 +33,4 @@ class TokenApi {
   }
 }
 
-export const tokenApi = new TokenApi();
+export const loginApi = new LoginApi();

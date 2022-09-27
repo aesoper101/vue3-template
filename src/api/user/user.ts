@@ -1,11 +1,6 @@
 import { useRequest } from '@/utils/http/request';
 import type { APIResult } from '@/utils/http/type';
-
-export interface GetUserInfoResponse {
-  username: string;
-  sex: number;
-  image: string;
-}
+import type { GetUserInfoResponse } from './types';
 
 class UserApi {
   public getUserInfo<T = GetUserInfoResponse, R = APIResult<T>>() {

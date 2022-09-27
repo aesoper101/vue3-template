@@ -1,7 +1,6 @@
 import { createI18n } from 'vue-i18n';
 import enUS from './en-US';
 import zhCN from './zh-CN';
-import { LOCALE_STORE_KEY } from '@/constants';
 
 type MessageSchema = typeof enUS;
 
@@ -10,7 +9,7 @@ export const LOCALE_OPTIONS = [
   { label: 'English', value: 'en-US' },
 ];
 
-export const defaultLocale = localStorage.getItem(LOCALE_STORE_KEY) || 'zh-CN';
+export const defaultLocale = 'zh-CN';
 
 const i18n = createI18n<[MessageSchema], 'en-US' | 'zh-CN'>({
   locale: defaultLocale,

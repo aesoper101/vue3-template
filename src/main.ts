@@ -15,4 +15,11 @@ import 'normalize.css';
 // import '@arco-design/web-vue/dist/arco.css';
 import '@/assets/styles/index.less';
 
-createApp(App).use(store).use(router).use(i18n).mount('#app');
+import { vHasPermissionDirective } from '@/directives';
+
+createApp(App)
+  .use(store)
+  .use(router)
+  .use(i18n)
+  .directive('permission', vHasPermissionDirective)
+  .mount('#app');

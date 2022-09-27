@@ -7,6 +7,7 @@ export interface ViteEnv {
   VITE_PORT: number;
   VITE_MOCK_ENABLED: boolean;
   VITE_PROXY: [string, string][];
+  VITE_USE_CDN: boolean;
 }
 
 export function wrapperEnv(envConf: Record<string, any>): ViteEnv {

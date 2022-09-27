@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv, mergeConfig } from 'vite';
 import type { ServerOptions, ProxyOptions } from 'vite';
 import eslint from 'vite-plugin-eslint';
-
+import type { UserConfig } from 'vite';
 import baseConfig from './vite.config.base';
 import { wrapperEnv } from './utils';
 import { createMockPlugin } from './plugin/mock';
@@ -66,7 +66,7 @@ export default defineConfig(({ mode }) => {
         createMockPlugin(false),
         validateEnv(),
       ],
-    },
+    } as UserConfig,
     baseConfig,
   );
 });

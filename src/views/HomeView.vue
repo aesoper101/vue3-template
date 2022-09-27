@@ -1,16 +1,17 @@
 <template>
   <div>HomeView</div>
-  <a-button type="primary" @click="changeLanguage">test</a-button>
+  <a-button type="primary" @click="changeLanguage" v-permission>test</a-button>
   <a-button type="primary" @click="doLogin">登录</a-button>
   <a-button type="primary" @click="getUserInfo">获取信息</a-button>
   <div>{{ userInfo?.sex }}</div>
+  <p>测试</p>
   <a-time-picker />
 </template>
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
   import useLocale from '@/hooks/locale';
-  import { tokenApi } from '@/api/token';
+  import { loginApi } from '@/api/login';
   import { useTokenStore } from '@/stores/token';
   import { Message } from '@arco-design/web-vue';
   import { userApi, type GetUserInfoResponse } from '@/api/user';
@@ -27,7 +28,7 @@
         changeLocale(currentLocale.value != 'en-US' ? 'en-US' : 'zh-CN');
       };
 
-      const { execute, data } = tokenApi.login({ username: '11', password: '22' });
+      const { execute, data } = loginApi.login({ username: '11', password: '22' });
 
       const doLogin = () => {
         execute().then(() => {

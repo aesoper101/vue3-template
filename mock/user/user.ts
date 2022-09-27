@@ -13,7 +13,7 @@ export default [
     //   });
     // },
     rawResponse: async (req, res) => {
-      res.statusCode = 400;
+      res.statusCode = 401;
       res.end(
         JSON.stringify(
           resultSuccess({

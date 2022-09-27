@@ -1,19 +1,25 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import legacy from '@vitejs/plugin-legacy';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import svgLoader from 'vite-svg-loader';
 import windiCSS from './plugin/windiCSS';
 import configResolverPlugin from './plugin/resolvers';
 import configVitePluginForArco from './plugin/arco';
 import configStyleImportPlugin from './plugin/styleImport';
+import autoImport from './plugin/autoImport';
 
 export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
+    legacy({
+      targets: ['defaults', 'not IE 11'],
+    }),
     svgLoader({ svgoConfig: {} }),
     configResolverPlugin(),
+    autoImport(),
     configStyleImportPlugin(),
     configVitePluginForArco(),
     windiCSS(),
