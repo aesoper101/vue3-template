@@ -10,9 +10,9 @@ import type {
   AxiosResponseInterceptor,
 } from '@/utils/http/interceptors/type';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import { useTokenStore } from '@/stores/token';
-import type { APIResult } from '@/utils/http/type';
+
 import { LastStepResponseInterceptor } from '@/utils/http/interceptors';
+import { useUserStore } from '@/stores';
 
 const controller = new AbortController();
 
@@ -37,12 +37,12 @@ createAuthRefreshInterceptor(instance, refreshAuthLogic, {
   retryInstance: instance,
   onRetry: (requestConfig) => {
     console.log('onRetry');
-    const { token } = useTokenStore();
+    const { token } = useUserStore();
     return Promise.resolve(setTokenHeader(requestConfig, token));
   },
 
   shouldRefresh: (error: AxiosError<APIResult>): boolean => {
-    const { isTokenWillExpire } = useTokenStore();
+    const { isTokenWillExpire } = useUserStore();
     if (isTokenWillExpire) {
       return true;
     }

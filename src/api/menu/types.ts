@@ -10,7 +10,7 @@ export interface Menu extends TimeResponse {
   // 路由path, 存在则添加到动态路由
   router?: string | null;
   // 权限标识
-  perms?: string | null;
+  perms?: string[] | null;
   // 资源类型  0: 目录 1: 菜单 2: 权限/按钮
   type: EnumResource;
   // 资源图标

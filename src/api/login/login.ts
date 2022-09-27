@@ -1,35 +1,26 @@
 import { useRequest } from '@/utils/http/request';
-import type { APIResult } from '@/utils/http/type';
-import type {
-  LoginRequest,
-  LoginResponse,
-  RefreshTokenRequest,
-  RefreshTokenResponse,
-} from './types';
+import type { LoginInput, LoginResult, RefreshTokenInput, RefreshTokenResult } from './types';
 
 class LoginApi {
-  public login<T = LoginResponse, R = APIResult<T>>(input: LoginRequest) {
+  public login<T = LoginResult, R = APIResult<T>>(input: LoginInput) {
     return useRequest<R>('/v1/login', {
       data: input,
       method: 'post',
     });
   }
 
-  public logout<T = LoginResponse, R = APIResult<T>>() {
+  public logout<T = LoginResult, R = APIResult<T>>() {
     return useRequest<R>('/v1/logout', {
       method: 'post',
     });
   }
 
-  public refreshToken<T = RefreshTokenResponse, R = APIResult<T>>(input: RefreshTokenRequest) {
-    return useRequest<R>(
-      '/v1/refreshToken',
-      {
-        data: input,
-        method: 'post',
-      },
-      { immediate: true },
-    );
+  public refreshToken<T = RefreshTokenResult, R = APIResult<T>>(input: RefreshTokenInput) {
+    return useRequest<R>('/v1/refreshToken', {
+      data: input,
+      method: 'post',
+      headers: { Authorization: input.refreshToken },
+    });
   }
 }
 

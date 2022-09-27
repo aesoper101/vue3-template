@@ -3,8 +3,7 @@ import { AxiosError } from 'axios';
 import type { AxiosResponse } from 'axios';
 import { Message, Modal } from '@arco-design/web-vue';
 import i18n from '@/locales';
-import { useTokenStore } from '@/stores/token';
-import type { APIResult } from '@/utils/http/type';
+import { useUserStore } from '@/stores';
 
 export function LastStepResponseInterceptor(): AxiosResponseInterceptor {
   return {
@@ -36,8 +35,8 @@ export function LastStepResponseInterceptor(): AxiosResponseInterceptor {
             titleAlign: 'start',
             cancelText: t('cancelText'),
             async onOk() {
-              const { clearToken } = useTokenStore();
-              clearToken();
+              const { resetToken } = useUserStore();
+              resetToken();
               window.location.reload();
             },
           });

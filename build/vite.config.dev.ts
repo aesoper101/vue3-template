@@ -64,7 +64,7 @@ export default defineConfig(({ mode }) => {
           exclude: ['node_modules'],
         }),
         createMockPlugin(false),
-        validateEnv(),
+        validateEnv(true),
       ],
     } as UserConfig,
     baseConfig,

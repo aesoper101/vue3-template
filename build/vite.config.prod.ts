@@ -8,6 +8,7 @@ import banner from './plugin/banner';
 import pwa from './plugin/pwa';
 import { wrapperEnv } from './utils';
 import importCDNResource from './plugin/cdn';
+import validateEnv from './plugin/validateEnv';
 
 export default defineConfig(({ mode }) => {
   const originEnv = loadEnv(mode, process.cwd());
@@ -22,7 +23,8 @@ export default defineConfig(({ mode }) => {
         configImageminPlugin(),
         pwa(),
         banner(),
-        env.VITE_USE_CDN && importCDNResource(),
+        env?.VITE_USE_CDN === true && importCDNResource(),
+        validateEnv(false),
       ],
       esbuild: {
         pure: ['console.log'],
@@ -34,6 +36,8 @@ export default defineConfig(({ mode }) => {
             chunkFileNames: 'assets/js/[name]-[hash].js',
             entryFileNames: 'assets/js/[name]-[hash].js',
             assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
+            // https://router.vuejs.org/guide/advanced/lazy-loading.html#with-vite
+            // https://rollupjs.org/guide/en/#outputmanualchunks
             manualChunks: {
               arco: ['@arco-design/web-vue'],
               chart: ['echarts', 'vue-echarts'],

@@ -6,7 +6,9 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "auto-imports.d.ts"
+    "types/**/*.d.ts",
+    "types/**/*.ts",
+    "auto-imports.d.ts",
   ],
   "exclude": [
     "dist/"
@@ -17,7 +19,8 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "typeRoots": ["./types"],
   },
   "references": [
     {

@@ -1,4 +1,4 @@
-export interface APIResult<T = any> {
+declare interface APIResult<T = any> {
   /**
    * @description 错误码
    */
@@ -25,7 +25,7 @@ export interface APIResult<T = any> {
   readonly time: number;
 }
 
-export interface APIPaginationInput {
+declare interface APIPaginationInput {
   /** 当前分页 */
   pageNo?: number;
 
@@ -33,7 +33,7 @@ export interface APIPaginationInput {
   pageSize?: number;
 }
 
-export interface APIPaginationOutput<T> {
+declare interface APIPaginationOutput<T> {
   /** 当前分页 */
   pageNo: number;
 
@@ -47,7 +47,7 @@ export interface APIPaginationOutput<T> {
 }
 
 /** 分页请求结果 */
-export type APIPaginationResult<T, T1 = APIPaginationOutput<T>> = APIResult<T1>;
+declare type APIPaginationResult<T, T1 = APIPaginationOutput<T>> = APIResult<T1>;
 
 /** 无分页列表请求结果 */
-export type APIListResult<T, T1 = T[]> = APIResult<T1>;
+declare type APIListResult<T, T1 = T[]> = APIResult<T1>;

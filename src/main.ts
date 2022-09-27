@@ -16,10 +16,13 @@ import 'normalize.css';
 import '@/assets/styles/index.less';
 
 import { vHasPermissionDirective } from '@/directives';
+import { errorHandler, warnHandler } from '@/utils/error-handle';
+import { hasPermission } from '@/utils/permission';
 
-createApp(App)
-  .use(store)
-  .use(router)
-  .use(i18n)
-  .directive('permission', vHasPermissionDirective)
-  .mount('#app');
+const app = createApp(App);
+
+app.use(store).use(router).use(i18n).directive('permission', vHasPermissionDirective).mount('#app');
+
+app.config.errorHandler = errorHandler;
+app.config.warnHandler = warnHandler;
+app.config.globalProperties.$auth = hasPermission;

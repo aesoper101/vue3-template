@@ -1,6 +1,9 @@
 import { createPinia } from 'pinia';
 
-export { useLocaleStore } from '@/stores/locale';
+export * from './locale';
+export * from './permission';
+export * from './user';
+export * from './user_menu';
 
 const store = createPinia();
 

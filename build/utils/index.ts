@@ -1,17 +1,9 @@
 export function isReportMode(): boolean {
-  return process.env.REPORT === 'true';
+  return process.env?.REPORT === 'true';
 }
 
-export interface ViteEnv {
-  VITE_API_BASE_URL: string;
-  VITE_PORT: number;
-  VITE_MOCK_ENABLED: boolean;
-  VITE_PROXY: [string, string][];
-  VITE_USE_CDN: boolean;
-}
-
-export function wrapperEnv(envConf: Record<string, any>): ViteEnv {
-  const ret: any = {};
+export function wrapperEnv(envConf: Record<string, any>): Record<string, any> {
+  const ret: Record<string, any> = {};
 
   for (const envName of Object.keys(envConf)) {
     let realName = envConf[envName].replace(/\\n/g, '\n');

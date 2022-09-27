@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue';
 import legacy from '@vitejs/plugin-legacy';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import svgLoader from 'vite-svg-loader';
+import VueSetupExtend from 'vite-plugin-vue-setup-extend';
 import windiCSS from './plugin/windiCSS';
 import configResolverPlugin from './plugin/resolvers';
 import configVitePluginForArco from './plugin/arco';
@@ -12,7 +13,11 @@ import autoImport from './plugin/autoImport';
 
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      // 包含实验性的语法糖,暂不建议开启
+      // https://vuejs.org/guide/extras/reactivity-transform.html
+      // reactivityTransform: true,
+    }),
     vueJsx(),
     legacy({
       targets: ['defaults', 'not IE 11'],
@@ -23,6 +28,7 @@ export default defineConfig({
     configStyleImportPlugin(),
     configVitePluginForArco(),
     windiCSS(),
+    VueSetupExtend(),
   ],
   resolve: {
     alias: [
