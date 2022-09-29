@@ -9,7 +9,7 @@ export default [
       return resultSuccess({
         refreshToken: 'test',
         token: 'refreshToken',
-        expireTime: 1664085582000,
+        expireTime: 1664350814000,
       });
     },
   },
@@ -23,7 +23,7 @@ export default [
           resultSuccess({
             // refreshToken: 'test',
             token: 'refreshToken',
-            expireTime: 1664085762000,
+            expireTime: 1664350814000,
           }),
         ),
       );

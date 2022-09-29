@@ -1,7 +1,13 @@
 import { useUserStore } from '@/stores';
+import { storeToRefs } from 'pinia';
 
+/**
+ * 判断是覅拥有权限
+ * @param permissionKey
+ */
 export const hasPermission = (permissionKey: string): boolean => {
-  const { permissions } = useUserStore();
+  const store = useUserStore();
+  const { permissions } = storeToRefs(store);
 
-  return permissions.some((v) => v === permissionKey);
+  return permissions.value.some((v) => v === permissionKey);
 };

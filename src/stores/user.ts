@@ -10,32 +10,33 @@ import {
   TOKEN_STORE_KEY,
 } from '@/constants';
 import { computed } from 'vue';
-import type { Menu } from '@/api/menu';
 
 export const useUserStore = defineStore('user', () => {
   const userInfo = reactive<UserInfo>({
+    uid: '',
     image: '',
     sex: 1,
     username: '',
   });
 
   const permissionList = ref<string[]>([]);
-  const menuList = ref<Menu[]>([]);
+  const menuList = ref<MenuRoute[]>([]);
+  const hasFetchMenuFromServer = ref(false);
 
   const token = useStorage(TOKEN_STORE_KEY, '', localStorage);
   const refreshToken = useStorage(REFRESH_TOKEN_STORE_KEY, '', localStorage);
   const expireTime = useStorage(TOKEN_EXPIRES_TIME_STORE_KEY, 0, localStorage);
 
-  const isLogin = computed(() => {
+  const isLogin = () => {
     if (token.value && expireTime.value) {
       const nowTime = parseInt(String(new Date().getTime() / 1000));
       // 如果超过60秒重新获取token
       return expireTime.value / 1000 - nowTime > 0;
     }
     return false;
-  });
+  };
 
-  const isTokenWillExpire = computed(() => {
+  const isTokenWillExpire = () => {
     if (token.value && expireTime.value) {
       const nowTime = parseInt(String(new Date().getTime() / 1000));
       // 如果超过60秒重新获取token
@@ -43,7 +44,7 @@ export const useUserStore = defineStore('user', () => {
       return subTime < 60 && subTime > 0;
     }
     return false;
-  });
+  };
 
   /** 重置token */
   const resetToken = () => {
@@ -61,6 +62,7 @@ export const useUserStore = defineStore('user', () => {
 
   const resultUserInfo = () => {
     merge(userInfo, {
+      id: '',
       image: '',
       sex: 1,
       username: '',
@@ -68,7 +70,7 @@ export const useUserStore = defineStore('user', () => {
   };
 
   /** 获取登录个人信息 */
-  const loadUserInfo = () => {
+  const doLoadUser = () => {
     return new Promise<UserInfo>((resolve, reject) => {
       const { execute, data, error } = userApi.getUserInfo();
       execute().then(
@@ -86,15 +88,17 @@ export const useUserStore = defineStore('user', () => {
   /**
    * 加载用户菜单
    */
-  const loadUserMenus = () => {
-    return new Promise<Menu[]>((resolve, reject) => {
+  const doLoadUserMenus = () => {
+    return new Promise<MenuRoute[]>((resolve, reject) => {
       const { execute, data, error } = userApi.getUserMenus();
       execute().then(
         () => {
           menuList.value = data.value?.result || [];
           resolve(menuList.value);
+          hasFetchMenuFromServer.value = true;
         },
         () => {
+          hasFetchMenuFromServer.value = true;
           reject(error);
         },
       );
@@ -104,7 +108,7 @@ export const useUserStore = defineStore('user', () => {
   /**
    * 加载用户权限
    */
-  const loadUserPermissions = () => {
+  const doLoadUserPermissions = () => {
     return new Promise<string[]>((resolve, reject) => {
       const { execute, data, error } = userApi.getUserPermissions();
       execute().then(
@@ -129,7 +133,7 @@ export const useUserStore = defineStore('user', () => {
             token.value = data.value?.result.token;
             refreshToken.value = data.value?.result.refreshToken;
             expireTime.value = data.value?.result.expireTime;
-            return afterLogin();
+            resolve(null);
           },
           () => {
             reject(error);
@@ -143,7 +147,7 @@ export const useUserStore = defineStore('user', () => {
 
   /** 登录成功之后, 获取用户信息以及生成权限路由 */
   const afterLogin = () => {
-    return Promise.all([loadUserInfo(), loadUserMenus(), loadUserPermissions()]);
+    return Promise.all([doLoadUser(), doLoadUserMenus(), doLoadUserPermissions()]);
   };
 
   /** 刷新token */
@@ -190,7 +194,9 @@ export const useUserStore = defineStore('user', () => {
     doRefreshToken,
     resetToken,
     doLogout,
+    doLoadLoginInfo: afterLogin,
+    hasFetchMenuFromServer,
     permissions: computed(() => permissionList.value),
-    userMenuList: computed<Menu[]>(() => menuList.value),
+    userAsyncMenuList: computed<MenuRoute[]>(() => menuList.value),
   };
 });

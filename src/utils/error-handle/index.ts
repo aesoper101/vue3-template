@@ -7,13 +7,11 @@ import type { ComponentPublicInstance } from 'vue';
  * @param info
  */
 export const errorHandler = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
   err: unknown,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
   instance: ComponentPublicInstance | null,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
   info: string,
 ): void => {
+  console.log(err, info);
   return;
 };
 
@@ -24,12 +22,10 @@ export const errorHandler = (
  * @param info
  */
 export const warnHandler = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
   err: unknown,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
   instance: ComponentPublicInstance | null,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
   info: string,
 ): void => {
+  console.log(err, info);
   return;
 };

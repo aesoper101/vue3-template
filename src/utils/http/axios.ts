@@ -43,7 +43,7 @@ createAuthRefreshInterceptor(instance, refreshAuthLogic, {
 
   shouldRefresh: (error: AxiosError<APIResult>): boolean => {
     const { isTokenWillExpire } = useUserStore();
-    if (isTokenWillExpire) {
+    if (isTokenWillExpire()) {
       return true;
     }
     // 根据自己业务修改

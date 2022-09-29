@@ -10,6 +10,13 @@ export function resultSuccess<T = Recordable>(result?: T, { message = 'ok' } = {
   };
 }
 
+export function resultListSuccess<T = any>(list: T[], { message = 'ok' } = {}) {
+  return {
+    ...resultSuccess(list),
+    message,
+  };
+}
+
 export function resultPageSuccess<T = any>(
   page: number,
   pageSize: number,

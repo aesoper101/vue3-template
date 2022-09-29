@@ -1,6 +1,6 @@
 import { useRequest } from '@/utils/http/request';
 import type { UserInfo } from './types';
-import type { Menu } from '@/api/menu';
+import type { MenuInfo } from '@/api/menu';
 
 class UserApi {
   /**
@@ -15,7 +15,7 @@ class UserApi {
   /**
    * 获取登录用户菜单
    */
-  public getUserMenus<T = Menu, R = APIListResult<T>>() {
+  public getUserMenus<T = MenuInfo, R = APIListResult<T>>() {
     return useRequest<R>('/v1/user/getUserMenu', { method: 'get' });
   }
 

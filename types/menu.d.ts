@@ -1,6 +1,4 @@
-import type { TimeResponse } from '@/api/common';
-
-export interface MenuInfo extends TimeResponse {
+declare interface MenuRoute {
   // 菜单ID
   id: number;
   // 上级菜单ID
@@ -23,4 +21,13 @@ export interface MenuInfo extends TimeResponse {
   keepalive: boolean;
   // 是否显示
   isShow: boolean;
+}
+
+declare enum EnumResource {
+  // 分组
+  GROUP,
+  // 菜单
+  MENU,
+  // 权限/按钮
+  PERMISSION,
 }

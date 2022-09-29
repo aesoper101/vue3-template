@@ -1,19 +1,12 @@
 import type { MockMethod } from 'vite-plugin-mock';
-import { resultSuccess } from '../_utils';
+import { resultListSuccess, resultSuccess } from '../_utils';
 
 export default [
   {
     url: '/api/v1/user/getUserInfo',
     method: 'get',
-    // response: () => {
-    //   return resultSuccess({
-    //     sex: 1,
-    //     username: 'testxiao',
-    //     image: 'testurl',
-    //   });
-    // },
     rawResponse: async (req, res) => {
-      res.statusCode = 401;
+      res.statusCode = 200;
       res.end(
         JSON.stringify(
           resultSuccess({
@@ -24,6 +17,20 @@ export default [
           // resultError('eer', { code: 100358 }),
         ),
       );
+    },
+  },
+  {
+    url: '/api/v1/user/permission',
+    method: 'get',
+    response: () => {
+      return resultListSuccess(['sys.user.add', 'sys.user.list']);
+    },
+  },
+  {
+    url: '/api/v1/user/getUserMenu',
+    method: 'get',
+    response: () => {
+      return resultListSuccess([]);
     },
   },
 ] as MockMethod[];
