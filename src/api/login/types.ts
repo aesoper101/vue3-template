@@ -1,6 +1,8 @@
 export interface LoginInput {
   username: string;
   password: string;
+  captcha: string;
+  uuid: string;
 }
 
 export interface LoginResult {

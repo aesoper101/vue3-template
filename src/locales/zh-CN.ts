@@ -1,4 +1,8 @@
+import localeLogin from './zh-CN/views/login';
+
 export default {
+  ...localeLogin,
+
   'navbar.action.locale': '切换为中文',
   'locale.ZH': '简体中文',
   'locale.EN': '英文',
@@ -29,5 +33,11 @@ export default {
   reLogin: '重新登录',
   'confirm.logout': '确认退出',
   'logged.out.warning': '登录信息已失效，您可以取消留在此页面，或重新登入',
+  'do.logged.out.warning': '请确认是否退出登录',
   cancelText: '取消',
+  confirmText: '确认',
+
+  userCenter: '用户中心',
+  userSettings: '用户设置',
+  logout: '登出登录',
 };

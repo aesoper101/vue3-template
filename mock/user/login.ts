@@ -9,7 +9,7 @@ export default [
       return resultSuccess({
         refreshToken: 'test',
         token: 'refreshToken',
-        expireTime: 1664350814000,
+        expireTime: 1665236342000,
       });
     },
   },
@@ -21,9 +21,8 @@ export default [
       res.end(
         JSON.stringify(
           resultSuccess({
-            // refreshToken: 'test',
             token: 'refreshToken',
-            expireTime: 1664350814000,
+            expireTime: 1665581942000,
           }),
         ),
       );

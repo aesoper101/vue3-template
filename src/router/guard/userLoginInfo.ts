@@ -1,7 +1,7 @@
 import type { LocationQueryRaw, Router } from 'vue-router';
 import NProgress from 'nprogress';
 import { useUserStore } from '@/stores';
-import { DEFAULT_ROUTE_NAME, LOGIN_NAME } from '@/constants';
+import { DEFAULT_ROUTE_NAME, LOGIN_NAME, NOT_FOUND_NAME, whiteNameList } from '@/constants';
 
 export default function setupUserLoginInfoGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
@@ -17,8 +17,20 @@ export default function setupUserLoginInfoGuard(router: Router) {
         } else {
           try {
             await userStore.doLoadLoginInfo();
-            console.log('data', userStore.userAsyncMenuList);
-            next();
+            // 添加路由
+            const hasRoute = router.hasRoute(to.name!);
+            if (hasRoute) {
+              next();
+            } else {
+              next({
+                name: NOT_FOUND_NAME,
+                query: {
+                  redirect: to.fullPath,
+                  ...to.query,
+                } as LocationQueryRaw,
+                replace: true,
+              });
+            }
           } catch (e) {
             await userStore.doLogout();
             next({
@@ -32,7 +44,12 @@ export default function setupUserLoginInfoGuard(router: Router) {
         }
       }
     } else {
-      next();
+      if (whiteNameList.some((n) => n === to.name)) {
+        // 在免登录名单，直接进入
+        next();
+      } else {
+        next({ name: LOGIN_NAME, query: { redirect: to.fullPath }, replace: true });
+      }
     }
   });
 }

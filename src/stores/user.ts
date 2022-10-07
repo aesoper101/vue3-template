@@ -6,10 +6,17 @@ import { loginApi, type LoginInput } from '@/api/login';
 import { useStorage } from '@vueuse/core';
 import {
   REFRESH_TOKEN_STORE_KEY,
+  REMEMBER_INFO_STORE_KEY,
   TOKEN_EXPIRES_TIME_STORE_KEY,
   TOKEN_STORE_KEY,
 } from '@/constants';
 import { computed } from 'vue';
+import { useCrypto } from '@/utils/crypto';
+
+interface RememberInfo {
+  username: string;
+  password: string;
+}
 
 export const useUserStore = defineStore('user', () => {
   const userInfo = reactive<UserInfo>({
@@ -22,10 +29,21 @@ export const useUserStore = defineStore('user', () => {
   const permissionList = ref<string[]>([]);
   const menuList = ref<MenuRoute[]>([]);
   const hasFetchMenuFromServer = ref(false);
+  const rememberInfo = useStorage(REMEMBER_INFO_STORE_KEY, '', localStorage);
 
   const token = useStorage(TOKEN_STORE_KEY, '', localStorage);
   const refreshToken = useStorage(REFRESH_TOKEN_STORE_KEY, '', localStorage);
   const expireTime = useStorage(TOKEN_EXPIRES_TIME_STORE_KEY, 0, localStorage);
+
+  const { aesEncrypt, aseDecrypt } = useCrypto();
+
+  const getRememberInfo = computed<RememberInfo | null>(() => {
+    try {
+      return JSON.parse(aseDecrypt(rememberInfo.value)) as RememberInfo;
+    } catch (e) {
+      return null;
+    }
+  });
 
   const isLogin = () => {
     if (token.value && expireTime.value) {
@@ -124,7 +142,7 @@ export const useUserStore = defineStore('user', () => {
   };
 
   /** 登录 */
-  const doLogin = (input: LoginInput) => {
+  const doLogin = (input: LoginInput, remember = false) => {
     return new Promise((resolve, reject) => {
       try {
         const { execute, data, error } = loginApi.login(input);
@@ -133,6 +151,12 @@ export const useUserStore = defineStore('user', () => {
             token.value = data.value?.result.token;
             refreshToken.value = data.value?.result.refreshToken;
             expireTime.value = data.value?.result.expireTime;
+            if (remember) {
+              const info: RememberInfo = { username: input.username, password: input.password };
+              rememberInfo.value = aesEncrypt(JSON.stringify(info));
+            } else {
+              rememberInfo.value = null;
+            }
             resolve(null);
           },
           () => {
@@ -173,9 +197,15 @@ export const useUserStore = defineStore('user', () => {
   /** 退出登录 */
   const doLogout = () => {
     return new Promise((resolve, reject) => {
+      if (!isLogin()) {
+        resetToken();
+        reject(null);
+        return;
+      }
       const { execute, error } = loginApi.logout();
       execute().then(
         () => {
+          resetToken();
           resolve(null);
         },
         () => {
@@ -198,5 +228,6 @@ export const useUserStore = defineStore('user', () => {
     hasFetchMenuFromServer,
     permissions: computed(() => permissionList.value),
     userAsyncMenuList: computed<MenuRoute[]>(() => menuList.value),
+    getRememberInfo,
   };
 });

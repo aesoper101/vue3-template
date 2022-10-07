@@ -1,4 +1,8 @@
+import localeLogin from './en-US/views/login';
+
 export default {
+  ...localeLogin,
+
   'navbar.action.locale': 'Switch to English',
   'locale.ZH': 'Simplified Chinese',
   'locale.EN': 'English',
@@ -33,5 +37,11 @@ export default {
   'confirm.logout': 'Confirm logout',
   'logged.out.warning':
     'You have been logged out, you can cancel to stay on this page, or log in again',
+  'do.logged.out.warning': '请确认是否退出登录',
   cancelText: 'Cancel',
+  confirmText: 'Confirm',
+
+  userCenter: 'User Center',
+  userSettings: 'User Settings',
+  logout: 'Logout',
 };

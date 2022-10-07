@@ -53,20 +53,17 @@ export default defineConfig(({ mode }) => {
     proxy: env.VITE_MOCK_ENABLED ? {} : createProxy(env.VITE_PROXY),
   };
 
-  return mergeConfig(
-    {
-      mode: mode,
-      server: serverOptions,
-      plugins: [
-        eslint({
-          cache: false,
-          include: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.vue'],
-          exclude: ['node_modules'],
-        }),
-        createMockPlugin(false),
-        validateEnv(true),
-      ],
-    } as UserConfig,
-    baseConfig,
-  );
+  return mergeConfig(baseConfig, {
+    mode: mode,
+    server: serverOptions,
+    plugins: [
+      eslint({
+        cache: false,
+        include: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.vue'],
+        exclude: ['node_modules'],
+      }),
+      createMockPlugin(false),
+      validateEnv(true),
+    ],
+  } as UserConfig);
 });

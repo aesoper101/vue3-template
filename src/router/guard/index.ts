@@ -1,6 +1,5 @@
 import type { Router } from 'vue-router';
 import { setRouteEmitter } from '@/utils/router';
-import setupPermissionGuard from '@/router/guard/permission';
 import setupUserLoginInfoGuard from '@/router/guard/userLoginInfo';
 import { isNavigationFailure } from 'vue-router';
 import NProgress from 'nprogress';
@@ -15,14 +14,13 @@ export default function createRouteGuard(router: Router) {
   setErrorHandler(router);
   setupPageGuard(router);
   setupUserLoginInfoGuard(router);
-  setupPermissionGuard(router);
   createAfterGuard(router);
 }
 
 function createAfterGuard(router: Router) {
   router.afterEach((to, from, failure) => {
     if (isNavigationFailure(failure)) {
-      console.log('failed navigation', failure);
+      console.log('failed navigation ', failure);
     }
     NProgress.done();
   });

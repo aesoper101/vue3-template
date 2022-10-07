@@ -5,4 +5,5 @@ interface ImportMetaEnv extends ViteEnv {
   VITE_MOCK_ENABLED: boolean;
   VITE_PROXY: [string, string][];
   VITE_USE_CDN: boolean;
+  VITE_APP_KEY: string;
 }
